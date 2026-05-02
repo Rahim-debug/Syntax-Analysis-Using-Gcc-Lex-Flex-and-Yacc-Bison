@@ -1,0 +1,2875 @@
+Terminals unused in grammar
+
+   Biop
+   Dot
+   ExprKw
+   AssignErr
+   '!'
+
+
+Rules useless in parser due to conflicts
+
+   23 Modifiers: /* empty */
+
+
+State 0 conflicts: 6 shift/reduce
+State 12 conflicts: 6 shift/reduce
+State 18 conflicts: 2 shift/reduce, 1 reduce/reduce
+State 27 conflicts: 6 shift/reduce, 2 reduce/reduce
+State 41 conflicts: 2 shift/reduce
+State 45 conflicts: 1 shift/reduce
+State 48 conflicts: 2 shift/reduce
+State 53 conflicts: 1 reduce/reduce
+State 107 conflicts: 24 shift/reduce, 27 reduce/reduce
+State 108 conflicts: 24 shift/reduce, 6 reduce/reduce
+State 127 conflicts: 1 shift/reduce
+State 144 conflicts: 6 shift/reduce
+State 160 conflicts: 1 shift/reduce
+State 165 conflicts: 24 shift/reduce, 6 reduce/reduce
+
+
+Grammar
+
+    0 $accept: Program $end
+
+    1 Program: Statements
+
+    2 Statements: Statement Statements
+    3           | Statement
+    4           | /* empty */
+
+    5 Statement: DeclStat
+    6          | ExprStat
+    7          | IfStat
+    8          | ForStat
+    9          | WhileStat
+   10          | RetStat
+   11          | PrintStat
+   12          | Block
+   13          | MethodDef
+   14          | ClassDef
+   15          | Expr
+   16          | error Smicln
+   17          | error Clspar
+
+   18 ClassDef: Class Id Block
+
+   19 MethodDef: Modifiers Type Id Opnbr Params Clsbr Block
+   20          | Modifiers Type Id Opnbr Params Clsbr Smicln
+
+   21 Modifiers: Modifiers Modifier
+   22          | Modifier
+   23          | /* empty */
+
+   24 Modifier: Public
+   25         | StaticStat
+   26         | Func_type
+
+   27 Type: Datatype
+   28     | Void
+   29     | Id
+
+   30 Params: ParamList
+   31       | /* empty */
+
+   32 ParamList: Param
+   33          | ParamList Comma Param
+
+   34 Param: Type Id
+   35      | Type Id Osqbr Clsqbr
+
+   36 Block: Opnpar Statements Clspar
+
+   37 DeclStat: Type Id Assign Expr Smicln
+   38         | Type Id Smicln
+   39         | Type Id Osqbr Const1 Clsqbr Assign Opnpar ArrayVals Clspar Smicln
+   40         | Type Id Osqbr Clsqbr Assign Opnpar ArrayVals Clspar Smicln
+   41         | Type Id Assign New Id Opnbr Clsbr Smicln
+   42         | Declare Type Id Smicln
+   43         | Type Id Assign Opnbr Type Clsbr Expr Smicln
+
+   44 ArrayVals: Expr
+   45          | ArrayVals Comma Expr
+   46          | /* empty */
+
+   47 ExprStat: Expr Assign Expr Smicln
+   48         | Expr Smicln
+   49         | Id Assign Expr '+' Smicln
+
+   50 IfStat: If Opnbr Expr Clsbr Statement
+   51       | If Opnbr Expr Clsbr Statement Else Statement
+   52       | If Opnbr Expr Clsbr
+   53       | If Expr
+
+   54 ForStat: For Opnbr ForInit Smicln Expr Smicln Expr Clsbr Statement
+   55        | For Opnbr ForInit Smicln Expr Smicln Expr Clsbr
+
+   56 ForInit: Type Id Assign Expr
+   57        | Expr Assign Expr
+   58        | /* empty */
+
+   59 WhileStat: While Opnbr Expr Clsbr Statement
+   60          | While Opnbr Expr Clsbr
+
+   61 RetStat: Ret Expr Smicln
+   62        | Ret Smicln
+
+   63 PrintStat: Print Opnbr PrintArgs Clsbr Smicln
+   64          | Print Opnbr Smicln Clsbr
+
+   65 PrintArgs: Expr
+   66          | PrintArgs Comma Expr
+   67          | /* empty */
+
+   68 Expr: Expr '+' Expr
+   69     | Expr '-' Expr
+   70     | Expr '*' Expr
+   71     | Expr '/' Expr
+   72     | Expr Relop Expr
+   73     | Expr Logicop Expr
+   74     | Logicop Expr
+   75     | Expr Unop
+   76     | Unop Expr
+   77     | Opnbr Expr Clsbr
+   78     | Opnbr Type Clsbr Expr
+   79     | Id Osqbr Expr Clsqbr
+   80     | Id
+   81     | Const1
+   82     | Const2
+   83     | Const3
+   84     | Const4
+   85     | Const_F
+   86     | Bool
+   87     | Id Opnbr PrintArgs Clsbr
+   88     | Expr Logicop Clsbr
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'!' (33)
+'*' (42) 70
+'+' (43) 49 68
+'-' (45) 69
+'/' (47) 71
+error (256) 16 17
+Ret (258) 61 62
+Bool (259) 86
+Datatype (260) 27
+Else (261) 51
+If (262) 50 51 52 53
+While (263) 59 60
+For (264) 54 55
+Class (265) 18
+Func_type (266) 26
+Assign (267) 37 39 40 41 43 47 49 56 57
+Biop (268)
+Unop (269) 75 76
+Opnbr (270) 19 20 41 43 50 51 52 54 55 59 60 63 64 77 78 87
+Clsbr (271) 19 20 41 43 50 51 52 54 55 59 60 63 64 77 78 87 88
+Opnpar (272) 36 39 40
+Clspar (273) 17 36 39 40
+Osqbr (274) 35 39 40 79
+Clsqbr (275) 35 39 40 79
+Smicln (276) 16 20 37 38 39 40 41 42 43 47 48 49 54 55 61 62 63 64
+Comma (277) 33 45 66
+Const1 (278) 39 81
+Const2 (279) 82
+Const3 (280) 83
+Const4 (281) 84
+Const_F (282) 85
+Id (283) 18 19 20 29 34 35 37 38 39 40 41 42 43 49 56 79 80 87
+Public (284) 24
+StaticStat (285) 25
+New (286) 41
+Print (287) 63 64
+Relop (288) 72
+Logicop (289) 73 74 88
+Dot (290)
+Void (291) 28
+ExprKw (292)
+Declare (293) 42
+AssignErr (294)
+
+
+Nonterminals, with rules where they appear
+
+$accept (45)
+    on left: 0
+Program (46)
+    on left: 1, on right: 0
+Statements (47)
+    on left: 2 3 4, on right: 1 2 36
+Statement (48)
+    on left: 5 6 7 8 9 10 11 12 13 14 15 16 17, on right: 2 3 50 51
+    54 59
+ClassDef (49)
+    on left: 18, on right: 14
+MethodDef (50)
+    on left: 19 20, on right: 13
+Modifiers (51)
+    on left: 21 22 23, on right: 19 20 21
+Modifier (52)
+    on left: 24 25 26, on right: 21 22
+Type (53)
+    on left: 27 28 29, on right: 19 20 34 35 37 38 39 40 41 42 43 56
+    78
+Params (54)
+    on left: 30 31, on right: 19 20
+ParamList (55)
+    on left: 32 33, on right: 30 33
+Param (56)
+    on left: 34 35, on right: 32 33
+Block (57)
+    on left: 36, on right: 12 18 19
+DeclStat (58)
+    on left: 37 38 39 40 41 42 43, on right: 5
+ArrayVals (59)
+    on left: 44 45 46, on right: 39 40 45
+ExprStat (60)
+    on left: 47 48 49, on right: 6
+IfStat (61)
+    on left: 50 51 52 53, on right: 7
+ForStat (62)
+    on left: 54 55, on right: 8
+ForInit (63)
+    on left: 56 57 58, on right: 54 55
+WhileStat (64)
+    on left: 59 60, on right: 9
+RetStat (65)
+    on left: 61 62, on right: 10
+PrintStat (66)
+    on left: 63 64, on right: 11
+PrintArgs (67)
+    on left: 65 66 67, on right: 63 66 87
+Expr (68)
+    on left: 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85
+    86 87 88, on right: 15 37 43 44 45 47 48 49 50 51 52 53 54 55 56
+    57 59 60 61 65 66 68 69 70 71 72 73 74 75 76 77 78 79 88
+
+
+state 0
+
+    0 $accept: . Program $end
+
+    error       shift, and go to state 1
+    Ret         shift, and go to state 2
+    Bool        shift, and go to state 3
+    Datatype    shift, and go to state 4
+    If          shift, and go to state 5
+    While       shift, and go to state 6
+    For         shift, and go to state 7
+    Class       shift, and go to state 8
+    Func_type   shift, and go to state 9
+    Unop        shift, and go to state 10
+    Opnbr       shift, and go to state 11
+    Opnpar      shift, and go to state 12
+    Const1      shift, and go to state 13
+    Const2      shift, and go to state 14
+    Const3      shift, and go to state 15
+    Const4      shift, and go to state 16
+    Const_F     shift, and go to state 17
+    Id          shift, and go to state 18
+    Public      shift, and go to state 19
+    StaticStat  shift, and go to state 20
+    Print       shift, and go to state 21
+    Logicop     shift, and go to state 22
+    Void        shift, and go to state 23
+    Declare     shift, and go to state 24
+
+    $end        reduce using rule 4 (Statements)
+    Datatype    [reduce using rule 23 (Modifiers)]
+    Func_type   [reduce using rule 23 (Modifiers)]
+    Id          [reduce using rule 23 (Modifiers)]
+    Public      [reduce using rule 23 (Modifiers)]
+    StaticStat  [reduce using rule 23 (Modifiers)]
+    Void        [reduce using rule 23 (Modifiers)]
+
+    Program     go to state 25
+    Statements  go to state 26
+    Statement   go to state 27
+    ClassDef    go to state 28
+    MethodDef   go to state 29
+    Modifiers   go to state 30
+    Modifier    go to state 31
+    Type        go to state 32
+    Block       go to state 33
+    DeclStat    go to state 34
+    ExprStat    go to state 35
+    IfStat      go to state 36
+    ForStat     go to state 37
+    WhileStat   go to state 38
+    RetStat     go to state 39
+    PrintStat   go to state 40
+    Expr        go to state 41
+
+
+state 1
+
+   16 Statement: error . Smicln
+   17          | error . Clspar
+
+    Clspar  shift, and go to state 42
+    Smicln  shift, and go to state 43
+
+
+state 2
+
+   61 RetStat: Ret . Expr Smicln
+   62        | Ret . Smicln
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Smicln   shift, and go to state 44
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    Expr  go to state 46
+
+
+state 3
+
+   86 Expr: Bool .
+
+    $default  reduce using rule 86 (Expr)
+
+
+state 4
+
+   27 Type: Datatype .
+
+    $default  reduce using rule 27 (Type)
+
+
+state 5
+
+   50 IfStat: If . Opnbr Expr Clsbr Statement
+   51       | If . Opnbr Expr Clsbr Statement Else Statement
+   52       | If . Opnbr Expr Clsbr
+   53       | If . Expr
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 47
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    Expr  go to state 48
+
+
+state 6
+
+   59 WhileStat: While . Opnbr Expr Clsbr Statement
+   60          | While . Opnbr Expr Clsbr
+
+    Opnbr  shift, and go to state 49
+
+
+state 7
+
+   54 ForStat: For . Opnbr ForInit Smicln Expr Smicln Expr Clsbr Statement
+   55        | For . Opnbr ForInit Smicln Expr Smicln Expr Clsbr
+
+    Opnbr  shift, and go to state 50
+
+
+state 8
+
+   18 ClassDef: Class . Id Block
+
+    Id  shift, and go to state 51
+
+
+state 9
+
+   26 Modifier: Func_type .
+
+    $default  reduce using rule 26 (Modifier)
+
+
+state 10
+
+   76 Expr: Unop . Expr
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    Expr  go to state 52
+
+
+state 11
+
+   77 Expr: Opnbr . Expr Clsbr
+   78     | Opnbr . Type Clsbr Expr
+
+    Bool      shift, and go to state 3
+    Datatype  shift, and go to state 4
+    Unop      shift, and go to state 10
+    Opnbr     shift, and go to state 11
+    Const1    shift, and go to state 13
+    Const2    shift, and go to state 14
+    Const3    shift, and go to state 15
+    Const4    shift, and go to state 16
+    Const_F   shift, and go to state 17
+    Id        shift, and go to state 53
+    Logicop   shift, and go to state 22
+    Void      shift, and go to state 23
+
+    Type  go to state 54
+    Expr  go to state 55
+
+
+state 12
+
+   36 Block: Opnpar . Statements Clspar
+
+    error       shift, and go to state 1
+    Ret         shift, and go to state 2
+    Bool        shift, and go to state 3
+    Datatype    shift, and go to state 4
+    If          shift, and go to state 5
+    While       shift, and go to state 6
+    For         shift, and go to state 7
+    Class       shift, and go to state 8
+    Func_type   shift, and go to state 9
+    Unop        shift, and go to state 10
+    Opnbr       shift, and go to state 11
+    Opnpar      shift, and go to state 12
+    Const1      shift, and go to state 13
+    Const2      shift, and go to state 14
+    Const3      shift, and go to state 15
+    Const4      shift, and go to state 16
+    Const_F     shift, and go to state 17
+    Id          shift, and go to state 18
+    Public      shift, and go to state 19
+    StaticStat  shift, and go to state 20
+    Print       shift, and go to state 21
+    Logicop     shift, and go to state 22
+    Void        shift, and go to state 23
+    Declare     shift, and go to state 24
+
+    Datatype    [reduce using rule 23 (Modifiers)]
+    Func_type   [reduce using rule 23 (Modifiers)]
+    Clspar      reduce using rule 4 (Statements)
+    Id          [reduce using rule 23 (Modifiers)]
+    Public      [reduce using rule 23 (Modifiers)]
+    StaticStat  [reduce using rule 23 (Modifiers)]
+    Void        [reduce using rule 23 (Modifiers)]
+
+    Statements  go to state 56
+    Statement   go to state 27
+    ClassDef    go to state 28
+    MethodDef   go to state 29
+    Modifiers   go to state 30
+    Modifier    go to state 31
+    Type        go to state 32
+    Block       go to state 33
+    DeclStat    go to state 34
+    ExprStat    go to state 35
+    IfStat      go to state 36
+    ForStat     go to state 37
+    WhileStat   go to state 38
+    RetStat     go to state 39
+    PrintStat   go to state 40
+    Expr        go to state 41
+
+
+state 13
+
+   81 Expr: Const1 .
+
+    $default  reduce using rule 81 (Expr)
+
+
+state 14
+
+   82 Expr: Const2 .
+
+    $default  reduce using rule 82 (Expr)
+
+
+state 15
+
+   83 Expr: Const3 .
+
+    $default  reduce using rule 83 (Expr)
+
+
+state 16
+
+   84 Expr: Const4 .
+
+    $default  reduce using rule 84 (Expr)
+
+
+state 17
+
+   85 Expr: Const_F .
+
+    $default  reduce using rule 85 (Expr)
+
+
+state 18
+
+   29 Type: Id .
+   49 ExprStat: Id . Assign Expr '+' Smicln
+   79 Expr: Id . Osqbr Expr Clsqbr
+   80     | Id .
+   87     | Id . Opnbr PrintArgs Clsbr
+
+    Assign  shift, and go to state 57
+    Opnbr   shift, and go to state 58
+    Osqbr   shift, and go to state 59
+
+    Assign    [reduce using rule 80 (Expr)]
+    Opnbr     [reduce using rule 80 (Expr)]
+    Id        reduce using rule 29 (Type)
+    Id        [reduce using rule 80 (Expr)]
+    $default  reduce using rule 80 (Expr)
+
+
+state 19
+
+   24 Modifier: Public .
+
+    $default  reduce using rule 24 (Modifier)
+
+
+state 20
+
+   25 Modifier: StaticStat .
+
+    $default  reduce using rule 25 (Modifier)
+
+
+state 21
+
+   63 PrintStat: Print . Opnbr PrintArgs Clsbr Smicln
+   64          | Print . Opnbr Smicln Clsbr
+
+    Opnbr  shift, and go to state 60
+
+
+state 22
+
+   74 Expr: Logicop . Expr
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    Expr  go to state 61
+
+
+state 23
+
+   28 Type: Void .
+
+    $default  reduce using rule 28 (Type)
+
+
+state 24
+
+   42 DeclStat: Declare . Type Id Smicln
+
+    Datatype  shift, and go to state 4
+    Id        shift, and go to state 62
+    Void      shift, and go to state 23
+
+    Type  go to state 63
+
+
+state 25
+
+    0 $accept: Program . $end
+
+    $end  shift, and go to state 64
+
+
+state 26
+
+    1 Program: Statements .
+
+    $default  reduce using rule 1 (Program)
+
+
+state 27
+
+    2 Statements: Statement . Statements
+    3           | Statement .
+
+    error       shift, and go to state 1
+    Ret         shift, and go to state 2
+    Bool        shift, and go to state 3
+    Datatype    shift, and go to state 4
+    If          shift, and go to state 5
+    While       shift, and go to state 6
+    For         shift, and go to state 7
+    Class       shift, and go to state 8
+    Func_type   shift, and go to state 9
+    Unop        shift, and go to state 10
+    Opnbr       shift, and go to state 11
+    Opnpar      shift, and go to state 12
+    Const1      shift, and go to state 13
+    Const2      shift, and go to state 14
+    Const3      shift, and go to state 15
+    Const4      shift, and go to state 16
+    Const_F     shift, and go to state 17
+    Id          shift, and go to state 18
+    Public      shift, and go to state 19
+    StaticStat  shift, and go to state 20
+    Print       shift, and go to state 21
+    Logicop     shift, and go to state 22
+    Void        shift, and go to state 23
+    Declare     shift, and go to state 24
+
+    $end        reduce using rule 3 (Statements)
+    $end        [reduce using rule 4 (Statements)]
+    Datatype    [reduce using rule 23 (Modifiers)]
+    Func_type   [reduce using rule 23 (Modifiers)]
+    Clspar      reduce using rule 3 (Statements)
+    Clspar      [reduce using rule 4 (Statements)]
+    Id          [reduce using rule 23 (Modifiers)]
+    Public      [reduce using rule 23 (Modifiers)]
+    StaticStat  [reduce using rule 23 (Modifiers)]
+    Void        [reduce using rule 23 (Modifiers)]
+
+    Statements  go to state 65
+    Statement   go to state 27
+    ClassDef    go to state 28
+    MethodDef   go to state 29
+    Modifiers   go to state 30
+    Modifier    go to state 31
+    Type        go to state 32
+    Block       go to state 33
+    DeclStat    go to state 34
+    ExprStat    go to state 35
+    IfStat      go to state 36
+    ForStat     go to state 37
+    WhileStat   go to state 38
+    RetStat     go to state 39
+    PrintStat   go to state 40
+    Expr        go to state 41
+
+
+state 28
+
+   14 Statement: ClassDef .
+
+    $default  reduce using rule 14 (Statement)
+
+
+state 29
+
+   13 Statement: MethodDef .
+
+    $default  reduce using rule 13 (Statement)
+
+
+state 30
+
+   19 MethodDef: Modifiers . Type Id Opnbr Params Clsbr Block
+   20          | Modifiers . Type Id Opnbr Params Clsbr Smicln
+   21 Modifiers: Modifiers . Modifier
+
+    Datatype    shift, and go to state 4
+    Func_type   shift, and go to state 9
+    Id          shift, and go to state 62
+    Public      shift, and go to state 19
+    StaticStat  shift, and go to state 20
+    Void        shift, and go to state 23
+
+    Modifier  go to state 66
+    Type      go to state 67
+
+
+state 31
+
+   22 Modifiers: Modifier .
+
+    $default  reduce using rule 22 (Modifiers)
+
+
+state 32
+
+   37 DeclStat: Type . Id Assign Expr Smicln
+   38         | Type . Id Smicln
+   39         | Type . Id Osqbr Const1 Clsqbr Assign Opnpar ArrayVals Clspar Smicln
+   40         | Type . Id Osqbr Clsqbr Assign Opnpar ArrayVals Clspar Smicln
+   41         | Type . Id Assign New Id Opnbr Clsbr Smicln
+   43         | Type . Id Assign Opnbr Type Clsbr Expr Smicln
+
+    Id  shift, and go to state 68
+
+
+state 33
+
+   12 Statement: Block .
+
+    $default  reduce using rule 12 (Statement)
+
+
+state 34
+
+    5 Statement: DeclStat .
+
+    $default  reduce using rule 5 (Statement)
+
+
+state 35
+
+    6 Statement: ExprStat .
+
+    $default  reduce using rule 6 (Statement)
+
+
+state 36
+
+    7 Statement: IfStat .
+
+    $default  reduce using rule 7 (Statement)
+
+
+state 37
+
+    8 Statement: ForStat .
+
+    $default  reduce using rule 8 (Statement)
+
+
+state 38
+
+    9 Statement: WhileStat .
+
+    $default  reduce using rule 9 (Statement)
+
+
+state 39
+
+   10 Statement: RetStat .
+
+    $default  reduce using rule 10 (Statement)
+
+
+state 40
+
+   11 Statement: PrintStat .
+
+    $default  reduce using rule 11 (Statement)
+
+
+state 41
+
+   15 Statement: Expr .
+   47 ExprStat: Expr . Assign Expr Smicln
+   48         | Expr . Smicln
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   88     | Expr . Logicop Clsbr
+
+    Assign   shift, and go to state 69
+    Unop     shift, and go to state 70
+    Smicln   shift, and go to state 71
+    Relop    shift, and go to state 72
+    Logicop  shift, and go to state 73
+    '+'      shift, and go to state 74
+    '-'      shift, and go to state 75
+    '*'      shift, and go to state 76
+    '/'      shift, and go to state 77
+
+    Unop      [reduce using rule 15 (Statement)]
+    Logicop   [reduce using rule 15 (Statement)]
+    $default  reduce using rule 15 (Statement)
+
+
+state 42
+
+   17 Statement: error Clspar .
+
+    $default  reduce using rule 17 (Statement)
+
+
+state 43
+
+   16 Statement: error Smicln .
+
+    $default  reduce using rule 16 (Statement)
+
+
+state 44
+
+   62 RetStat: Ret Smicln .
+
+    $default  reduce using rule 62 (RetStat)
+
+
+state 45
+
+   79 Expr: Id . Osqbr Expr Clsqbr
+   80     | Id .
+   87     | Id . Opnbr PrintArgs Clsbr
+
+    Opnbr  shift, and go to state 58
+    Osqbr  shift, and go to state 59
+
+    Opnbr     [reduce using rule 80 (Expr)]
+    $default  reduce using rule 80 (Expr)
+
+
+state 46
+
+   61 RetStat: Ret Expr . Smicln
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   88     | Expr . Logicop Clsbr
+
+    Unop     shift, and go to state 70
+    Smicln   shift, and go to state 78
+    Relop    shift, and go to state 72
+    Logicop  shift, and go to state 73
+    '+'      shift, and go to state 74
+    '-'      shift, and go to state 75
+    '*'      shift, and go to state 76
+    '/'      shift, and go to state 77
+
+
+state 47
+
+   50 IfStat: If Opnbr . Expr Clsbr Statement
+   51       | If Opnbr . Expr Clsbr Statement Else Statement
+   52       | If Opnbr . Expr Clsbr
+   77 Expr: Opnbr . Expr Clsbr
+   78     | Opnbr . Type Clsbr Expr
+
+    Bool      shift, and go to state 3
+    Datatype  shift, and go to state 4
+    Unop      shift, and go to state 10
+    Opnbr     shift, and go to state 11
+    Const1    shift, and go to state 13
+    Const2    shift, and go to state 14
+    Const3    shift, and go to state 15
+    Const4    shift, and go to state 16
+    Const_F   shift, and go to state 17
+    Id        shift, and go to state 53
+    Logicop   shift, and go to state 22
+    Void      shift, and go to state 23
+
+    Type  go to state 54
+    Expr  go to state 79
+
+
+state 48
+
+   53 IfStat: If Expr .
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   88     | Expr . Logicop Clsbr
+
+    Unop     shift, and go to state 70
+    Relop    shift, and go to state 72
+    Logicop  shift, and go to state 73
+    '+'      shift, and go to state 74
+    '-'      shift, and go to state 75
+    '*'      shift, and go to state 76
+    '/'      shift, and go to state 77
+
+    Unop      [reduce using rule 53 (IfStat)]
+    Logicop   [reduce using rule 53 (IfStat)]
+    $default  reduce using rule 53 (IfStat)
+
+
+state 49
+
+   59 WhileStat: While Opnbr . Expr Clsbr Statement
+   60          | While Opnbr . Expr Clsbr
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    Expr  go to state 80
+
+
+state 50
+
+   54 ForStat: For Opnbr . ForInit Smicln Expr Smicln Expr Clsbr Statement
+   55        | For Opnbr . ForInit Smicln Expr Smicln Expr Clsbr
+
+    Bool      shift, and go to state 3
+    Datatype  shift, and go to state 4
+    Unop      shift, and go to state 10
+    Opnbr     shift, and go to state 11
+    Const1    shift, and go to state 13
+    Const2    shift, and go to state 14
+    Const3    shift, and go to state 15
+    Const4    shift, and go to state 16
+    Const_F   shift, and go to state 17
+    Id        shift, and go to state 53
+    Logicop   shift, and go to state 22
+    Void      shift, and go to state 23
+
+    $default  reduce using rule 58 (ForInit)
+
+    Type     go to state 81
+    ForInit  go to state 82
+    Expr     go to state 83
+
+
+state 51
+
+   18 ClassDef: Class Id . Block
+
+    Opnpar  shift, and go to state 12
+
+    Block  go to state 84
+
+
+state 52
+
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   76     | Unop Expr .
+   88     | Expr . Logicop Clsbr
+
+    Unop  shift, and go to state 70
+
+    $default  reduce using rule 76 (Expr)
+
+
+state 53
+
+   29 Type: Id .
+   79 Expr: Id . Osqbr Expr Clsqbr
+   80     | Id .
+   87     | Id . Opnbr PrintArgs Clsbr
+
+    Opnbr  shift, and go to state 58
+    Osqbr  shift, and go to state 59
+
+    Clsbr     reduce using rule 29 (Type)
+    Clsbr     [reduce using rule 80 (Expr)]
+    Id        reduce using rule 29 (Type)
+    $default  reduce using rule 80 (Expr)
+
+
+state 54
+
+   78 Expr: Opnbr Type . Clsbr Expr
+
+    Clsbr  shift, and go to state 85
+
+
+state 55
+
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   77     | Opnbr Expr . Clsbr
+   88     | Expr . Logicop Clsbr
+
+    Unop     shift, and go to state 70
+    Clsbr    shift, and go to state 86
+    Relop    shift, and go to state 72
+    Logicop  shift, and go to state 73
+    '+'      shift, and go to state 74
+    '-'      shift, and go to state 75
+    '*'      shift, and go to state 76
+    '/'      shift, and go to state 77
+
+
+state 56
+
+   36 Block: Opnpar Statements . Clspar
+
+    Clspar  shift, and go to state 87
+
+
+state 57
+
+   49 ExprStat: Id Assign . Expr '+' Smicln
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    Expr  go to state 88
+
+
+state 58
+
+   87 Expr: Id Opnbr . PrintArgs Clsbr
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    $default  reduce using rule 67 (PrintArgs)
+
+    PrintArgs  go to state 89
+    Expr       go to state 90
+
+
+state 59
+
+   79 Expr: Id Osqbr . Expr Clsqbr
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    Expr  go to state 91
+
+
+state 60
+
+   63 PrintStat: Print Opnbr . PrintArgs Clsbr Smicln
+   64          | Print Opnbr . Smicln Clsbr
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Smicln   shift, and go to state 92
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    $default  reduce using rule 67 (PrintArgs)
+
+    PrintArgs  go to state 93
+    Expr       go to state 90
+
+
+state 61
+
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   74     | Logicop Expr .
+   75     | Expr . Unop
+   88     | Expr . Logicop Clsbr
+
+    Unop   shift, and go to state 70
+    Relop  shift, and go to state 72
+    '+'    shift, and go to state 74
+    '-'    shift, and go to state 75
+    '*'    shift, and go to state 76
+    '/'    shift, and go to state 77
+
+    $default  reduce using rule 74 (Expr)
+
+
+state 62
+
+   29 Type: Id .
+
+    $default  reduce using rule 29 (Type)
+
+
+state 63
+
+   42 DeclStat: Declare Type . Id Smicln
+
+    Id  shift, and go to state 94
+
+
+state 64
+
+    0 $accept: Program $end .
+
+    $default  accept
+
+
+state 65
+
+    2 Statements: Statement Statements .
+
+    $default  reduce using rule 2 (Statements)
+
+
+state 66
+
+   21 Modifiers: Modifiers Modifier .
+
+    $default  reduce using rule 21 (Modifiers)
+
+
+state 67
+
+   19 MethodDef: Modifiers Type . Id Opnbr Params Clsbr Block
+   20          | Modifiers Type . Id Opnbr Params Clsbr Smicln
+
+    Id  shift, and go to state 95
+
+
+state 68
+
+   37 DeclStat: Type Id . Assign Expr Smicln
+   38         | Type Id . Smicln
+   39         | Type Id . Osqbr Const1 Clsqbr Assign Opnpar ArrayVals Clspar Smicln
+   40         | Type Id . Osqbr Clsqbr Assign Opnpar ArrayVals Clspar Smicln
+   41         | Type Id . Assign New Id Opnbr Clsbr Smicln
+   43         | Type Id . Assign Opnbr Type Clsbr Expr Smicln
+
+    Assign  shift, and go to state 96
+    Osqbr   shift, and go to state 97
+    Smicln  shift, and go to state 98
+
+
+state 69
+
+   47 ExprStat: Expr Assign . Expr Smicln
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    Expr  go to state 99
+
+
+state 70
+
+   75 Expr: Expr Unop .
+
+    $default  reduce using rule 75 (Expr)
+
+
+state 71
+
+   48 ExprStat: Expr Smicln .
+
+    $default  reduce using rule 48 (ExprStat)
+
+
+state 72
+
+   72 Expr: Expr Relop . Expr
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    Expr  go to state 100
+
+
+state 73
+
+   73 Expr: Expr Logicop . Expr
+   88     | Expr Logicop . Clsbr
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Clsbr    shift, and go to state 101
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    Expr  go to state 102
+
+
+state 74
+
+   68 Expr: Expr '+' . Expr
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    Expr  go to state 103
+
+
+state 75
+
+   69 Expr: Expr '-' . Expr
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    Expr  go to state 104
+
+
+state 76
+
+   70 Expr: Expr '*' . Expr
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    Expr  go to state 105
+
+
+state 77
+
+   71 Expr: Expr '/' . Expr
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    Expr  go to state 106
+
+
+state 78
+
+   61 RetStat: Ret Expr Smicln .
+
+    $default  reduce using rule 61 (RetStat)
+
+
+state 79
+
+   50 IfStat: If Opnbr Expr . Clsbr Statement
+   51       | If Opnbr Expr . Clsbr Statement Else Statement
+   52       | If Opnbr Expr . Clsbr
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   77     | Opnbr Expr . Clsbr
+   88     | Expr . Logicop Clsbr
+
+    Unop     shift, and go to state 70
+    Clsbr    shift, and go to state 107
+    Relop    shift, and go to state 72
+    Logicop  shift, and go to state 73
+    '+'      shift, and go to state 74
+    '-'      shift, and go to state 75
+    '*'      shift, and go to state 76
+    '/'      shift, and go to state 77
+
+
+state 80
+
+   59 WhileStat: While Opnbr Expr . Clsbr Statement
+   60          | While Opnbr Expr . Clsbr
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   88     | Expr . Logicop Clsbr
+
+    Unop     shift, and go to state 70
+    Clsbr    shift, and go to state 108
+    Relop    shift, and go to state 72
+    Logicop  shift, and go to state 73
+    '+'      shift, and go to state 74
+    '-'      shift, and go to state 75
+    '*'      shift, and go to state 76
+    '/'      shift, and go to state 77
+
+
+state 81
+
+   56 ForInit: Type . Id Assign Expr
+
+    Id  shift, and go to state 109
+
+
+state 82
+
+   54 ForStat: For Opnbr ForInit . Smicln Expr Smicln Expr Clsbr Statement
+   55        | For Opnbr ForInit . Smicln Expr Smicln Expr Clsbr
+
+    Smicln  shift, and go to state 110
+
+
+state 83
+
+   57 ForInit: Expr . Assign Expr
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   88     | Expr . Logicop Clsbr
+
+    Assign   shift, and go to state 111
+    Unop     shift, and go to state 70
+    Relop    shift, and go to state 72
+    Logicop  shift, and go to state 73
+    '+'      shift, and go to state 74
+    '-'      shift, and go to state 75
+    '*'      shift, and go to state 76
+    '/'      shift, and go to state 77
+
+
+state 84
+
+   18 ClassDef: Class Id Block .
+
+    $default  reduce using rule 18 (ClassDef)
+
+
+state 85
+
+   78 Expr: Opnbr Type Clsbr . Expr
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    Expr  go to state 112
+
+
+state 86
+
+   77 Expr: Opnbr Expr Clsbr .
+
+    $default  reduce using rule 77 (Expr)
+
+
+state 87
+
+   36 Block: Opnpar Statements Clspar .
+
+    $default  reduce using rule 36 (Block)
+
+
+state 88
+
+   49 ExprStat: Id Assign Expr . '+' Smicln
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   88     | Expr . Logicop Clsbr
+
+    Unop     shift, and go to state 70
+    Relop    shift, and go to state 72
+    Logicop  shift, and go to state 73
+    '+'      shift, and go to state 113
+    '-'      shift, and go to state 75
+    '*'      shift, and go to state 76
+    '/'      shift, and go to state 77
+
+
+state 89
+
+   66 PrintArgs: PrintArgs . Comma Expr
+   87 Expr: Id Opnbr PrintArgs . Clsbr
+
+    Clsbr  shift, and go to state 114
+    Comma  shift, and go to state 115
+
+
+state 90
+
+   65 PrintArgs: Expr .
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   88     | Expr . Logicop Clsbr
+
+    Unop     shift, and go to state 70
+    Relop    shift, and go to state 72
+    Logicop  shift, and go to state 73
+    '+'      shift, and go to state 74
+    '-'      shift, and go to state 75
+    '*'      shift, and go to state 76
+    '/'      shift, and go to state 77
+
+    $default  reduce using rule 65 (PrintArgs)
+
+
+state 91
+
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   79     | Id Osqbr Expr . Clsqbr
+   88     | Expr . Logicop Clsbr
+
+    Unop     shift, and go to state 70
+    Clsqbr   shift, and go to state 116
+    Relop    shift, and go to state 72
+    Logicop  shift, and go to state 73
+    '+'      shift, and go to state 74
+    '-'      shift, and go to state 75
+    '*'      shift, and go to state 76
+    '/'      shift, and go to state 77
+
+
+state 92
+
+   64 PrintStat: Print Opnbr Smicln . Clsbr
+
+    Clsbr  shift, and go to state 117
+
+
+state 93
+
+   63 PrintStat: Print Opnbr PrintArgs . Clsbr Smicln
+   66 PrintArgs: PrintArgs . Comma Expr
+
+    Clsbr  shift, and go to state 118
+    Comma  shift, and go to state 115
+
+
+state 94
+
+   42 DeclStat: Declare Type Id . Smicln
+
+    Smicln  shift, and go to state 119
+
+
+state 95
+
+   19 MethodDef: Modifiers Type Id . Opnbr Params Clsbr Block
+   20          | Modifiers Type Id . Opnbr Params Clsbr Smicln
+
+    Opnbr  shift, and go to state 120
+
+
+state 96
+
+   37 DeclStat: Type Id Assign . Expr Smicln
+   41         | Type Id Assign . New Id Opnbr Clsbr Smicln
+   43         | Type Id Assign . Opnbr Type Clsbr Expr Smicln
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 121
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    New      shift, and go to state 122
+    Logicop  shift, and go to state 22
+
+    Expr  go to state 123
+
+
+state 97
+
+   39 DeclStat: Type Id Osqbr . Const1 Clsqbr Assign Opnpar ArrayVals Clspar Smicln
+   40         | Type Id Osqbr . Clsqbr Assign Opnpar ArrayVals Clspar Smicln
+
+    Clsqbr  shift, and go to state 124
+    Const1  shift, and go to state 125
+
+
+state 98
+
+   38 DeclStat: Type Id Smicln .
+
+    $default  reduce using rule 38 (DeclStat)
+
+
+state 99
+
+   47 ExprStat: Expr Assign Expr . Smicln
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   88     | Expr . Logicop Clsbr
+
+    Unop     shift, and go to state 70
+    Smicln   shift, and go to state 126
+    Relop    shift, and go to state 72
+    Logicop  shift, and go to state 73
+    '+'      shift, and go to state 74
+    '-'      shift, and go to state 75
+    '*'      shift, and go to state 76
+    '/'      shift, and go to state 77
+
+
+state 100
+
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   72     | Expr Relop Expr .
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   88     | Expr . Logicop Clsbr
+
+    Unop  shift, and go to state 70
+    '+'   shift, and go to state 74
+    '-'   shift, and go to state 75
+    '*'   shift, and go to state 76
+    '/'   shift, and go to state 77
+
+    $default  reduce using rule 72 (Expr)
+
+
+state 101
+
+   88 Expr: Expr Logicop Clsbr .
+
+    $default  reduce using rule 88 (Expr)
+
+
+state 102
+
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   73     | Expr Logicop Expr .
+   75     | Expr . Unop
+   88     | Expr . Logicop Clsbr
+
+    Unop   shift, and go to state 70
+    Relop  shift, and go to state 72
+    '+'    shift, and go to state 74
+    '-'    shift, and go to state 75
+    '*'    shift, and go to state 76
+    '/'    shift, and go to state 77
+
+    $default  reduce using rule 73 (Expr)
+
+
+state 103
+
+   68 Expr: Expr . '+' Expr
+   68     | Expr '+' Expr .
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   88     | Expr . Logicop Clsbr
+
+    Unop  shift, and go to state 70
+    '*'   shift, and go to state 76
+    '/'   shift, and go to state 77
+
+    $default  reduce using rule 68 (Expr)
+
+
+state 104
+
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   69     | Expr '-' Expr .
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   88     | Expr . Logicop Clsbr
+
+    Unop  shift, and go to state 70
+    '*'   shift, and go to state 76
+    '/'   shift, and go to state 77
+
+    $default  reduce using rule 69 (Expr)
+
+
+state 105
+
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   70     | Expr '*' Expr .
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   88     | Expr . Logicop Clsbr
+
+    Unop  shift, and go to state 70
+
+    $default  reduce using rule 70 (Expr)
+
+
+state 106
+
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   71     | Expr '/' Expr .
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   88     | Expr . Logicop Clsbr
+
+    Unop  shift, and go to state 70
+
+    $default  reduce using rule 71 (Expr)
+
+
+state 107
+
+   50 IfStat: If Opnbr Expr Clsbr . Statement
+   51       | If Opnbr Expr Clsbr . Statement Else Statement
+   52       | If Opnbr Expr Clsbr .
+   77 Expr: Opnbr Expr Clsbr .
+
+    error       shift, and go to state 1
+    Ret         shift, and go to state 2
+    Bool        shift, and go to state 3
+    Datatype    shift, and go to state 4
+    If          shift, and go to state 5
+    While       shift, and go to state 6
+    For         shift, and go to state 7
+    Class       shift, and go to state 8
+    Func_type   shift, and go to state 9
+    Unop        shift, and go to state 10
+    Opnbr       shift, and go to state 11
+    Opnpar      shift, and go to state 12
+    Const1      shift, and go to state 13
+    Const2      shift, and go to state 14
+    Const3      shift, and go to state 15
+    Const4      shift, and go to state 16
+    Const_F     shift, and go to state 17
+    Id          shift, and go to state 18
+    Public      shift, and go to state 19
+    StaticStat  shift, and go to state 20
+    Print       shift, and go to state 21
+    Logicop     shift, and go to state 22
+    Void        shift, and go to state 23
+    Declare     shift, and go to state 24
+
+    $end        reduce using rule 52 (IfStat)
+    $end        [reduce using rule 77 (Expr)]
+    error       [reduce using rule 52 (IfStat)]
+    error       [reduce using rule 77 (Expr)]
+    Ret         [reduce using rule 52 (IfStat)]
+    Ret         [reduce using rule 77 (Expr)]
+    Bool        [reduce using rule 52 (IfStat)]
+    Bool        [reduce using rule 77 (Expr)]
+    Datatype    [reduce using rule 23 (Modifiers)]
+    Datatype    [reduce using rule 52 (IfStat)]
+    Datatype    [reduce using rule 77 (Expr)]
+    Else        reduce using rule 52 (IfStat)
+    Else        [reduce using rule 77 (Expr)]
+    If          [reduce using rule 52 (IfStat)]
+    If          [reduce using rule 77 (Expr)]
+    While       [reduce using rule 52 (IfStat)]
+    While       [reduce using rule 77 (Expr)]
+    For         [reduce using rule 52 (IfStat)]
+    For         [reduce using rule 77 (Expr)]
+    Class       [reduce using rule 52 (IfStat)]
+    Class       [reduce using rule 77 (Expr)]
+    Func_type   [reduce using rule 23 (Modifiers)]
+    Func_type   [reduce using rule 52 (IfStat)]
+    Func_type   [reduce using rule 77 (Expr)]
+    Unop        [reduce using rule 52 (IfStat)]
+    Unop        [reduce using rule 77 (Expr)]
+    Opnbr       [reduce using rule 52 (IfStat)]
+    Opnbr       [reduce using rule 77 (Expr)]
+    Opnpar      [reduce using rule 52 (IfStat)]
+    Opnpar      [reduce using rule 77 (Expr)]
+    Clspar      reduce using rule 52 (IfStat)
+    Clspar      [reduce using rule 77 (Expr)]
+    Const1      [reduce using rule 52 (IfStat)]
+    Const1      [reduce using rule 77 (Expr)]
+    Const2      [reduce using rule 52 (IfStat)]
+    Const2      [reduce using rule 77 (Expr)]
+    Const3      [reduce using rule 52 (IfStat)]
+    Const3      [reduce using rule 77 (Expr)]
+    Const4      [reduce using rule 52 (IfStat)]
+    Const4      [reduce using rule 77 (Expr)]
+    Const_F     [reduce using rule 52 (IfStat)]
+    Const_F     [reduce using rule 77 (Expr)]
+    Id          [reduce using rule 23 (Modifiers)]
+    Id          [reduce using rule 52 (IfStat)]
+    Id          [reduce using rule 77 (Expr)]
+    Public      [reduce using rule 23 (Modifiers)]
+    Public      [reduce using rule 52 (IfStat)]
+    Public      [reduce using rule 77 (Expr)]
+    StaticStat  [reduce using rule 23 (Modifiers)]
+    StaticStat  [reduce using rule 52 (IfStat)]
+    StaticStat  [reduce using rule 77 (Expr)]
+    Print       [reduce using rule 52 (IfStat)]
+    Print       [reduce using rule 77 (Expr)]
+    Relop       reduce using rule 77 (Expr)
+    Logicop     [reduce using rule 52 (IfStat)]
+    Logicop     [reduce using rule 77 (Expr)]
+    Void        [reduce using rule 23 (Modifiers)]
+    Void        [reduce using rule 52 (IfStat)]
+    Void        [reduce using rule 77 (Expr)]
+    Declare     [reduce using rule 52 (IfStat)]
+    Declare     [reduce using rule 77 (Expr)]
+    '+'         reduce using rule 77 (Expr)
+    '-'         reduce using rule 77 (Expr)
+    '*'         reduce using rule 77 (Expr)
+    '/'         reduce using rule 77 (Expr)
+
+    Statement  go to state 127
+    ClassDef   go to state 28
+    MethodDef  go to state 29
+    Modifiers  go to state 30
+    Modifier   go to state 31
+    Type       go to state 32
+    Block      go to state 33
+    DeclStat   go to state 34
+    ExprStat   go to state 35
+    IfStat     go to state 36
+    ForStat    go to state 37
+    WhileStat  go to state 38
+    RetStat    go to state 39
+    PrintStat  go to state 40
+    Expr       go to state 41
+
+
+state 108
+
+   59 WhileStat: While Opnbr Expr Clsbr . Statement
+   60          | While Opnbr Expr Clsbr .
+
+    error       shift, and go to state 1
+    Ret         shift, and go to state 2
+    Bool        shift, and go to state 3
+    Datatype    shift, and go to state 4
+    If          shift, and go to state 5
+    While       shift, and go to state 6
+    For         shift, and go to state 7
+    Class       shift, and go to state 8
+    Func_type   shift, and go to state 9
+    Unop        shift, and go to state 10
+    Opnbr       shift, and go to state 11
+    Opnpar      shift, and go to state 12
+    Const1      shift, and go to state 13
+    Const2      shift, and go to state 14
+    Const3      shift, and go to state 15
+    Const4      shift, and go to state 16
+    Const_F     shift, and go to state 17
+    Id          shift, and go to state 18
+    Public      shift, and go to state 19
+    StaticStat  shift, and go to state 20
+    Print       shift, and go to state 21
+    Logicop     shift, and go to state 22
+    Void        shift, and go to state 23
+    Declare     shift, and go to state 24
+
+    $end        reduce using rule 60 (WhileStat)
+    error       [reduce using rule 60 (WhileStat)]
+    Ret         [reduce using rule 60 (WhileStat)]
+    Bool        [reduce using rule 60 (WhileStat)]
+    Datatype    [reduce using rule 23 (Modifiers)]
+    Datatype    [reduce using rule 60 (WhileStat)]
+    Else        reduce using rule 60 (WhileStat)
+    If          [reduce using rule 60 (WhileStat)]
+    While       [reduce using rule 60 (WhileStat)]
+    For         [reduce using rule 60 (WhileStat)]
+    Class       [reduce using rule 60 (WhileStat)]
+    Func_type   [reduce using rule 23 (Modifiers)]
+    Func_type   [reduce using rule 60 (WhileStat)]
+    Unop        [reduce using rule 60 (WhileStat)]
+    Opnbr       [reduce using rule 60 (WhileStat)]
+    Opnpar      [reduce using rule 60 (WhileStat)]
+    Clspar      reduce using rule 60 (WhileStat)
+    Const1      [reduce using rule 60 (WhileStat)]
+    Const2      [reduce using rule 60 (WhileStat)]
+    Const3      [reduce using rule 60 (WhileStat)]
+    Const4      [reduce using rule 60 (WhileStat)]
+    Const_F     [reduce using rule 60 (WhileStat)]
+    Id          [reduce using rule 23 (Modifiers)]
+    Id          [reduce using rule 60 (WhileStat)]
+    Public      [reduce using rule 23 (Modifiers)]
+    Public      [reduce using rule 60 (WhileStat)]
+    StaticStat  [reduce using rule 23 (Modifiers)]
+    StaticStat  [reduce using rule 60 (WhileStat)]
+    Print       [reduce using rule 60 (WhileStat)]
+    Logicop     [reduce using rule 60 (WhileStat)]
+    Void        [reduce using rule 23 (Modifiers)]
+    Void        [reduce using rule 60 (WhileStat)]
+    Declare     [reduce using rule 60 (WhileStat)]
+
+    Statement  go to state 128
+    ClassDef   go to state 28
+    MethodDef  go to state 29
+    Modifiers  go to state 30
+    Modifier   go to state 31
+    Type       go to state 32
+    Block      go to state 33
+    DeclStat   go to state 34
+    ExprStat   go to state 35
+    IfStat     go to state 36
+    ForStat    go to state 37
+    WhileStat  go to state 38
+    RetStat    go to state 39
+    PrintStat  go to state 40
+    Expr       go to state 41
+
+
+state 109
+
+   56 ForInit: Type Id . Assign Expr
+
+    Assign  shift, and go to state 129
+
+
+state 110
+
+   54 ForStat: For Opnbr ForInit Smicln . Expr Smicln Expr Clsbr Statement
+   55        | For Opnbr ForInit Smicln . Expr Smicln Expr Clsbr
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    Expr  go to state 130
+
+
+state 111
+
+   57 ForInit: Expr Assign . Expr
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    Expr  go to state 131
+
+
+state 112
+
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   78     | Opnbr Type Clsbr Expr .
+   88     | Expr . Logicop Clsbr
+
+    Unop  shift, and go to state 70
+
+    $default  reduce using rule 78 (Expr)
+
+
+state 113
+
+   49 ExprStat: Id Assign Expr '+' . Smicln
+   68 Expr: Expr '+' . Expr
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Smicln   shift, and go to state 132
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    Expr  go to state 103
+
+
+state 114
+
+   87 Expr: Id Opnbr PrintArgs Clsbr .
+
+    $default  reduce using rule 87 (Expr)
+
+
+state 115
+
+   66 PrintArgs: PrintArgs Comma . Expr
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    Expr  go to state 133
+
+
+state 116
+
+   79 Expr: Id Osqbr Expr Clsqbr .
+
+    $default  reduce using rule 79 (Expr)
+
+
+state 117
+
+   64 PrintStat: Print Opnbr Smicln Clsbr .
+
+    $default  reduce using rule 64 (PrintStat)
+
+
+state 118
+
+   63 PrintStat: Print Opnbr PrintArgs Clsbr . Smicln
+
+    Smicln  shift, and go to state 134
+
+
+state 119
+
+   42 DeclStat: Declare Type Id Smicln .
+
+    $default  reduce using rule 42 (DeclStat)
+
+
+state 120
+
+   19 MethodDef: Modifiers Type Id Opnbr . Params Clsbr Block
+   20          | Modifiers Type Id Opnbr . Params Clsbr Smicln
+
+    Datatype  shift, and go to state 4
+    Id        shift, and go to state 62
+    Void      shift, and go to state 23
+
+    $default  reduce using rule 31 (Params)
+
+    Type       go to state 135
+    Params     go to state 136
+    ParamList  go to state 137
+    Param      go to state 138
+
+
+state 121
+
+   43 DeclStat: Type Id Assign Opnbr . Type Clsbr Expr Smicln
+   77 Expr: Opnbr . Expr Clsbr
+   78     | Opnbr . Type Clsbr Expr
+
+    Bool      shift, and go to state 3
+    Datatype  shift, and go to state 4
+    Unop      shift, and go to state 10
+    Opnbr     shift, and go to state 11
+    Const1    shift, and go to state 13
+    Const2    shift, and go to state 14
+    Const3    shift, and go to state 15
+    Const4    shift, and go to state 16
+    Const_F   shift, and go to state 17
+    Id        shift, and go to state 53
+    Logicop   shift, and go to state 22
+    Void      shift, and go to state 23
+
+    Type  go to state 139
+    Expr  go to state 55
+
+
+state 122
+
+   41 DeclStat: Type Id Assign New . Id Opnbr Clsbr Smicln
+
+    Id  shift, and go to state 140
+
+
+state 123
+
+   37 DeclStat: Type Id Assign Expr . Smicln
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   88     | Expr . Logicop Clsbr
+
+    Unop     shift, and go to state 70
+    Smicln   shift, and go to state 141
+    Relop    shift, and go to state 72
+    Logicop  shift, and go to state 73
+    '+'      shift, and go to state 74
+    '-'      shift, and go to state 75
+    '*'      shift, and go to state 76
+    '/'      shift, and go to state 77
+
+
+state 124
+
+   40 DeclStat: Type Id Osqbr Clsqbr . Assign Opnpar ArrayVals Clspar Smicln
+
+    Assign  shift, and go to state 142
+
+
+state 125
+
+   39 DeclStat: Type Id Osqbr Const1 . Clsqbr Assign Opnpar ArrayVals Clspar Smicln
+
+    Clsqbr  shift, and go to state 143
+
+
+state 126
+
+   47 ExprStat: Expr Assign Expr Smicln .
+
+    $default  reduce using rule 47 (ExprStat)
+
+
+state 127
+
+   50 IfStat: If Opnbr Expr Clsbr Statement .
+   51       | If Opnbr Expr Clsbr Statement . Else Statement
+
+    Else  shift, and go to state 144
+
+    Else      [reduce using rule 50 (IfStat)]
+    $default  reduce using rule 50 (IfStat)
+
+
+state 128
+
+   59 WhileStat: While Opnbr Expr Clsbr Statement .
+
+    $default  reduce using rule 59 (WhileStat)
+
+
+state 129
+
+   56 ForInit: Type Id Assign . Expr
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    Expr  go to state 145
+
+
+state 130
+
+   54 ForStat: For Opnbr ForInit Smicln Expr . Smicln Expr Clsbr Statement
+   55        | For Opnbr ForInit Smicln Expr . Smicln Expr Clsbr
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   88     | Expr . Logicop Clsbr
+
+    Unop     shift, and go to state 70
+    Smicln   shift, and go to state 146
+    Relop    shift, and go to state 72
+    Logicop  shift, and go to state 73
+    '+'      shift, and go to state 74
+    '-'      shift, and go to state 75
+    '*'      shift, and go to state 76
+    '/'      shift, and go to state 77
+
+
+state 131
+
+   57 ForInit: Expr Assign Expr .
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   88     | Expr . Logicop Clsbr
+
+    Unop     shift, and go to state 70
+    Relop    shift, and go to state 72
+    Logicop  shift, and go to state 73
+    '+'      shift, and go to state 74
+    '-'      shift, and go to state 75
+    '*'      shift, and go to state 76
+    '/'      shift, and go to state 77
+
+    $default  reduce using rule 57 (ForInit)
+
+
+state 132
+
+   49 ExprStat: Id Assign Expr '+' Smicln .
+
+    $default  reduce using rule 49 (ExprStat)
+
+
+state 133
+
+   66 PrintArgs: PrintArgs Comma Expr .
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   88     | Expr . Logicop Clsbr
+
+    Unop     shift, and go to state 70
+    Relop    shift, and go to state 72
+    Logicop  shift, and go to state 73
+    '+'      shift, and go to state 74
+    '-'      shift, and go to state 75
+    '*'      shift, and go to state 76
+    '/'      shift, and go to state 77
+
+    $default  reduce using rule 66 (PrintArgs)
+
+
+state 134
+
+   63 PrintStat: Print Opnbr PrintArgs Clsbr Smicln .
+
+    $default  reduce using rule 63 (PrintStat)
+
+
+state 135
+
+   34 Param: Type . Id
+   35      | Type . Id Osqbr Clsqbr
+
+    Id  shift, and go to state 147
+
+
+state 136
+
+   19 MethodDef: Modifiers Type Id Opnbr Params . Clsbr Block
+   20          | Modifiers Type Id Opnbr Params . Clsbr Smicln
+
+    Clsbr  shift, and go to state 148
+
+
+state 137
+
+   30 Params: ParamList .
+   33 ParamList: ParamList . Comma Param
+
+    Comma  shift, and go to state 149
+
+    $default  reduce using rule 30 (Params)
+
+
+state 138
+
+   32 ParamList: Param .
+
+    $default  reduce using rule 32 (ParamList)
+
+
+state 139
+
+   43 DeclStat: Type Id Assign Opnbr Type . Clsbr Expr Smicln
+   78 Expr: Opnbr Type . Clsbr Expr
+
+    Clsbr  shift, and go to state 150
+
+
+state 140
+
+   41 DeclStat: Type Id Assign New Id . Opnbr Clsbr Smicln
+
+    Opnbr  shift, and go to state 151
+
+
+state 141
+
+   37 DeclStat: Type Id Assign Expr Smicln .
+
+    $default  reduce using rule 37 (DeclStat)
+
+
+state 142
+
+   40 DeclStat: Type Id Osqbr Clsqbr Assign . Opnpar ArrayVals Clspar Smicln
+
+    Opnpar  shift, and go to state 152
+
+
+state 143
+
+   39 DeclStat: Type Id Osqbr Const1 Clsqbr . Assign Opnpar ArrayVals Clspar Smicln
+
+    Assign  shift, and go to state 153
+
+
+state 144
+
+   51 IfStat: If Opnbr Expr Clsbr Statement Else . Statement
+
+    error       shift, and go to state 1
+    Ret         shift, and go to state 2
+    Bool        shift, and go to state 3
+    Datatype    shift, and go to state 4
+    If          shift, and go to state 5
+    While       shift, and go to state 6
+    For         shift, and go to state 7
+    Class       shift, and go to state 8
+    Func_type   shift, and go to state 9
+    Unop        shift, and go to state 10
+    Opnbr       shift, and go to state 11
+    Opnpar      shift, and go to state 12
+    Const1      shift, and go to state 13
+    Const2      shift, and go to state 14
+    Const3      shift, and go to state 15
+    Const4      shift, and go to state 16
+    Const_F     shift, and go to state 17
+    Id          shift, and go to state 18
+    Public      shift, and go to state 19
+    StaticStat  shift, and go to state 20
+    Print       shift, and go to state 21
+    Logicop     shift, and go to state 22
+    Void        shift, and go to state 23
+    Declare     shift, and go to state 24
+
+    Datatype    [reduce using rule 23 (Modifiers)]
+    Func_type   [reduce using rule 23 (Modifiers)]
+    Id          [reduce using rule 23 (Modifiers)]
+    Public      [reduce using rule 23 (Modifiers)]
+    StaticStat  [reduce using rule 23 (Modifiers)]
+    Void        [reduce using rule 23 (Modifiers)]
+
+    Statement  go to state 154
+    ClassDef   go to state 28
+    MethodDef  go to state 29
+    Modifiers  go to state 30
+    Modifier   go to state 31
+    Type       go to state 32
+    Block      go to state 33
+    DeclStat   go to state 34
+    ExprStat   go to state 35
+    IfStat     go to state 36
+    ForStat    go to state 37
+    WhileStat  go to state 38
+    RetStat    go to state 39
+    PrintStat  go to state 40
+    Expr       go to state 41
+
+
+state 145
+
+   56 ForInit: Type Id Assign Expr .
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   88     | Expr . Logicop Clsbr
+
+    Unop     shift, and go to state 70
+    Relop    shift, and go to state 72
+    Logicop  shift, and go to state 73
+    '+'      shift, and go to state 74
+    '-'      shift, and go to state 75
+    '*'      shift, and go to state 76
+    '/'      shift, and go to state 77
+
+    $default  reduce using rule 56 (ForInit)
+
+
+state 146
+
+   54 ForStat: For Opnbr ForInit Smicln Expr Smicln . Expr Clsbr Statement
+   55        | For Opnbr ForInit Smicln Expr Smicln . Expr Clsbr
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    Expr  go to state 155
+
+
+state 147
+
+   34 Param: Type Id .
+   35      | Type Id . Osqbr Clsqbr
+
+    Osqbr  shift, and go to state 156
+
+    $default  reduce using rule 34 (Param)
+
+
+state 148
+
+   19 MethodDef: Modifiers Type Id Opnbr Params Clsbr . Block
+   20          | Modifiers Type Id Opnbr Params Clsbr . Smicln
+
+    Opnpar  shift, and go to state 12
+    Smicln  shift, and go to state 157
+
+    Block  go to state 158
+
+
+state 149
+
+   33 ParamList: ParamList Comma . Param
+
+    Datatype  shift, and go to state 4
+    Id        shift, and go to state 62
+    Void      shift, and go to state 23
+
+    Type   go to state 135
+    Param  go to state 159
+
+
+state 150
+
+   43 DeclStat: Type Id Assign Opnbr Type Clsbr . Expr Smicln
+   78 Expr: Opnbr Type Clsbr . Expr
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    Expr  go to state 160
+
+
+state 151
+
+   41 DeclStat: Type Id Assign New Id Opnbr . Clsbr Smicln
+
+    Clsbr  shift, and go to state 161
+
+
+state 152
+
+   40 DeclStat: Type Id Osqbr Clsqbr Assign Opnpar . ArrayVals Clspar Smicln
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    $default  reduce using rule 46 (ArrayVals)
+
+    ArrayVals  go to state 162
+    Expr       go to state 163
+
+
+state 153
+
+   39 DeclStat: Type Id Osqbr Const1 Clsqbr Assign . Opnpar ArrayVals Clspar Smicln
+
+    Opnpar  shift, and go to state 164
+
+
+state 154
+
+   51 IfStat: If Opnbr Expr Clsbr Statement Else Statement .
+
+    $default  reduce using rule 51 (IfStat)
+
+
+state 155
+
+   54 ForStat: For Opnbr ForInit Smicln Expr Smicln Expr . Clsbr Statement
+   55        | For Opnbr ForInit Smicln Expr Smicln Expr . Clsbr
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   88     | Expr . Logicop Clsbr
+
+    Unop     shift, and go to state 70
+    Clsbr    shift, and go to state 165
+    Relop    shift, and go to state 72
+    Logicop  shift, and go to state 73
+    '+'      shift, and go to state 74
+    '-'      shift, and go to state 75
+    '*'      shift, and go to state 76
+    '/'      shift, and go to state 77
+
+
+state 156
+
+   35 Param: Type Id Osqbr . Clsqbr
+
+    Clsqbr  shift, and go to state 166
+
+
+state 157
+
+   20 MethodDef: Modifiers Type Id Opnbr Params Clsbr Smicln .
+
+    $default  reduce using rule 20 (MethodDef)
+
+
+state 158
+
+   19 MethodDef: Modifiers Type Id Opnbr Params Clsbr Block .
+
+    $default  reduce using rule 19 (MethodDef)
+
+
+state 159
+
+   33 ParamList: ParamList Comma Param .
+
+    $default  reduce using rule 33 (ParamList)
+
+
+state 160
+
+   43 DeclStat: Type Id Assign Opnbr Type Clsbr Expr . Smicln
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   78     | Opnbr Type Clsbr Expr .
+   88     | Expr . Logicop Clsbr
+
+    Unop    shift, and go to state 70
+    Smicln  shift, and go to state 167
+
+    Smicln    [reduce using rule 78 (Expr)]
+    $default  reduce using rule 78 (Expr)
+
+
+state 161
+
+   41 DeclStat: Type Id Assign New Id Opnbr Clsbr . Smicln
+
+    Smicln  shift, and go to state 168
+
+
+state 162
+
+   40 DeclStat: Type Id Osqbr Clsqbr Assign Opnpar ArrayVals . Clspar Smicln
+   45 ArrayVals: ArrayVals . Comma Expr
+
+    Clspar  shift, and go to state 169
+    Comma   shift, and go to state 170
+
+
+state 163
+
+   44 ArrayVals: Expr .
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   88     | Expr . Logicop Clsbr
+
+    Unop     shift, and go to state 70
+    Relop    shift, and go to state 72
+    Logicop  shift, and go to state 73
+    '+'      shift, and go to state 74
+    '-'      shift, and go to state 75
+    '*'      shift, and go to state 76
+    '/'      shift, and go to state 77
+
+    $default  reduce using rule 44 (ArrayVals)
+
+
+state 164
+
+   39 DeclStat: Type Id Osqbr Const1 Clsqbr Assign Opnpar . ArrayVals Clspar Smicln
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    $default  reduce using rule 46 (ArrayVals)
+
+    ArrayVals  go to state 171
+    Expr       go to state 163
+
+
+state 165
+
+   54 ForStat: For Opnbr ForInit Smicln Expr Smicln Expr Clsbr . Statement
+   55        | For Opnbr ForInit Smicln Expr Smicln Expr Clsbr .
+
+    error       shift, and go to state 1
+    Ret         shift, and go to state 2
+    Bool        shift, and go to state 3
+    Datatype    shift, and go to state 4
+    If          shift, and go to state 5
+    While       shift, and go to state 6
+    For         shift, and go to state 7
+    Class       shift, and go to state 8
+    Func_type   shift, and go to state 9
+    Unop        shift, and go to state 10
+    Opnbr       shift, and go to state 11
+    Opnpar      shift, and go to state 12
+    Const1      shift, and go to state 13
+    Const2      shift, and go to state 14
+    Const3      shift, and go to state 15
+    Const4      shift, and go to state 16
+    Const_F     shift, and go to state 17
+    Id          shift, and go to state 18
+    Public      shift, and go to state 19
+    StaticStat  shift, and go to state 20
+    Print       shift, and go to state 21
+    Logicop     shift, and go to state 22
+    Void        shift, and go to state 23
+    Declare     shift, and go to state 24
+
+    $end        reduce using rule 55 (ForStat)
+    error       [reduce using rule 55 (ForStat)]
+    Ret         [reduce using rule 55 (ForStat)]
+    Bool        [reduce using rule 55 (ForStat)]
+    Datatype    [reduce using rule 23 (Modifiers)]
+    Datatype    [reduce using rule 55 (ForStat)]
+    Else        reduce using rule 55 (ForStat)
+    If          [reduce using rule 55 (ForStat)]
+    While       [reduce using rule 55 (ForStat)]
+    For         [reduce using rule 55 (ForStat)]
+    Class       [reduce using rule 55 (ForStat)]
+    Func_type   [reduce using rule 23 (Modifiers)]
+    Func_type   [reduce using rule 55 (ForStat)]
+    Unop        [reduce using rule 55 (ForStat)]
+    Opnbr       [reduce using rule 55 (ForStat)]
+    Opnpar      [reduce using rule 55 (ForStat)]
+    Clspar      reduce using rule 55 (ForStat)
+    Const1      [reduce using rule 55 (ForStat)]
+    Const2      [reduce using rule 55 (ForStat)]
+    Const3      [reduce using rule 55 (ForStat)]
+    Const4      [reduce using rule 55 (ForStat)]
+    Const_F     [reduce using rule 55 (ForStat)]
+    Id          [reduce using rule 23 (Modifiers)]
+    Id          [reduce using rule 55 (ForStat)]
+    Public      [reduce using rule 23 (Modifiers)]
+    Public      [reduce using rule 55 (ForStat)]
+    StaticStat  [reduce using rule 23 (Modifiers)]
+    StaticStat  [reduce using rule 55 (ForStat)]
+    Print       [reduce using rule 55 (ForStat)]
+    Logicop     [reduce using rule 55 (ForStat)]
+    Void        [reduce using rule 23 (Modifiers)]
+    Void        [reduce using rule 55 (ForStat)]
+    Declare     [reduce using rule 55 (ForStat)]
+
+    Statement  go to state 172
+    ClassDef   go to state 28
+    MethodDef  go to state 29
+    Modifiers  go to state 30
+    Modifier   go to state 31
+    Type       go to state 32
+    Block      go to state 33
+    DeclStat   go to state 34
+    ExprStat   go to state 35
+    IfStat     go to state 36
+    ForStat    go to state 37
+    WhileStat  go to state 38
+    RetStat    go to state 39
+    PrintStat  go to state 40
+    Expr       go to state 41
+
+
+state 166
+
+   35 Param: Type Id Osqbr Clsqbr .
+
+    $default  reduce using rule 35 (Param)
+
+
+state 167
+
+   43 DeclStat: Type Id Assign Opnbr Type Clsbr Expr Smicln .
+
+    $default  reduce using rule 43 (DeclStat)
+
+
+state 168
+
+   41 DeclStat: Type Id Assign New Id Opnbr Clsbr Smicln .
+
+    $default  reduce using rule 41 (DeclStat)
+
+
+state 169
+
+   40 DeclStat: Type Id Osqbr Clsqbr Assign Opnpar ArrayVals Clspar . Smicln
+
+    Smicln  shift, and go to state 173
+
+
+state 170
+
+   45 ArrayVals: ArrayVals Comma . Expr
+
+    Bool     shift, and go to state 3
+    Unop     shift, and go to state 10
+    Opnbr    shift, and go to state 11
+    Const1   shift, and go to state 13
+    Const2   shift, and go to state 14
+    Const3   shift, and go to state 15
+    Const4   shift, and go to state 16
+    Const_F  shift, and go to state 17
+    Id       shift, and go to state 45
+    Logicop  shift, and go to state 22
+
+    Expr  go to state 174
+
+
+state 171
+
+   39 DeclStat: Type Id Osqbr Const1 Clsqbr Assign Opnpar ArrayVals . Clspar Smicln
+   45 ArrayVals: ArrayVals . Comma Expr
+
+    Clspar  shift, and go to state 175
+    Comma   shift, and go to state 170
+
+
+state 172
+
+   54 ForStat: For Opnbr ForInit Smicln Expr Smicln Expr Clsbr Statement .
+
+    $default  reduce using rule 54 (ForStat)
+
+
+state 173
+
+   40 DeclStat: Type Id Osqbr Clsqbr Assign Opnpar ArrayVals Clspar Smicln .
+
+    $default  reduce using rule 40 (DeclStat)
+
+
+state 174
+
+   45 ArrayVals: ArrayVals Comma Expr .
+   68 Expr: Expr . '+' Expr
+   69     | Expr . '-' Expr
+   70     | Expr . '*' Expr
+   71     | Expr . '/' Expr
+   72     | Expr . Relop Expr
+   73     | Expr . Logicop Expr
+   75     | Expr . Unop
+   88     | Expr . Logicop Clsbr
+
+    Unop     shift, and go to state 70
+    Relop    shift, and go to state 72
+    Logicop  shift, and go to state 73
+    '+'      shift, and go to state 74
+    '-'      shift, and go to state 75
+    '*'      shift, and go to state 76
+    '/'      shift, and go to state 77
+
+    $default  reduce using rule 45 (ArrayVals)
+
+
+state 175
+
+   39 DeclStat: Type Id Osqbr Const1 Clsqbr Assign Opnpar ArrayVals Clspar . Smicln
+
+    Smicln  shift, and go to state 176
+
+
+state 176
+
+   39 DeclStat: Type Id Osqbr Const1 Clsqbr Assign Opnpar ArrayVals Clspar Smicln .
+
+    $default  reduce using rule 39 (DeclStat)

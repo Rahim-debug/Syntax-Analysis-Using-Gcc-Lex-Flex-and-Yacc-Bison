@@ -1,5 +1,20 @@
-reserved keyword : System.out.print
+reserved keyword : global
+datatype : void
+id : main
 special symbol : (
-punctuation : ;
 special symbol : )
-Error on Line 1: Malformed parameter or unexpected token ; inside method call.
+special symbol : {
+datatype : int
+id : x
+operator : =
+constant : 5
+punctuation : ;
+reserved keyword : if
+special symbol : (
+id : x
+operator : ==
+constant : 5
+special symbol : )
+special symbol : {
+special symbol : }
+special symbol : }

@@ -1,0 +1,20 @@
+Program
+  Statements
+    MethodDef
+      Modifiers
+        Modifier (global)
+      Type (void)
+      Id (main)
+      Block
+        Statements
+          DeclStat
+            Type (int)
+            Id (x)
+            Const1 (5)
+          Statements
+            IfStat
+              Expr
+                Id (x)
+                Relop (==)
+                Const1 (5)
+              Block

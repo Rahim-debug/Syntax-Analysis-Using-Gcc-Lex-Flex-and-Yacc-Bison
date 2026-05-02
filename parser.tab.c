@@ -73,6 +73,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 
 int yylex();
 int yyerror(char *s);
@@ -82,13 +83,63 @@ extern FILE* pars;
 extern int yylineno;
 int x = 0;
 
+typedef struct ASTNode {
+    char* name;
+    char* value;
+    int num_children;
+    struct ASTNode** children;
+} ASTNode;
+
+ASTNode* createNode(const char* name, int num_children, ...) {
+    ASTNode* node = (ASTNode*)malloc(sizeof(ASTNode));
+    node->name = strdup(name);
+    node->value = NULL;
+    node->num_children = num_children;
+    if (num_children > 0) {
+        node->children = (ASTNode**)malloc(num_children * sizeof(ASTNode*));
+        va_list args;
+        va_start(args, num_children);
+        for (int i = 0; i < num_children; i++) {
+            node->children[i] = va_arg(args, ASTNode*);
+        }
+        va_end(args);
+    } else {
+        node->children = NULL;
+    }
+    return node;
+}
+
+ASTNode* createLeaf(const char* name, const char* value) {
+    ASTNode* node = (ASTNode*)malloc(sizeof(ASTNode));
+    node->name = strdup(name);
+    node->value = value ? strdup(value) : NULL;
+    node->num_children = 0;
+    node->children = NULL;
+    return node;
+}
+
+void printTree(ASTNode* node, int depth) {
+    if (!node) return;
+    for (int i = 0; i < depth; i++) {
+        fprintf(pars, "  ");
+    }
+    if (node->value) {
+        fprintf(pars, "%s (%s)\n", node->name, node->value);
+    } else {
+        fprintf(pars, "%s\n", node->name);
+    }
+    for (int i = 0; i < node->num_children; i++) {
+        printTree(node->children[i], depth + 1);
+    }
+}
+
 
 /* Line 189 of yacc.c  */
-#line 88 "parser.tab.c"
+#line 139 "parser.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 1
+# define YYDEBUG 0
 #endif
 
 /* Enabling verbose error messages.  */
@@ -158,14 +209,15 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 15 "parser.y"
+#line 66 "parser.y"
 
-	char*str;
+	char* str;
+    struct ASTNode* node;
 
 
 
 /* Line 214 of yacc.c  */
-#line 169 "parser.tab.c"
+#line 221 "parser.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -177,7 +229,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 181 "parser.tab.c"
+#line 233 "parser.tab.c"
 
 #ifdef short
 # undef short
@@ -500,17 +552,17 @@ static const yytype_int8 yyrhs[] =
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
-static const yytype_uint8 yyrline[] =
+static const yytype_uint16 yyrline[] =
 {
-       0,    36,    36,    39,    40,    41,    44,    45,    46,    47,
-      48,    49,    50,    51,    52,    53,    54,    55,    56,    59,
-      61,    62,    65,    65,    65,    66,    66,    66,    68,    68,
-      68,    70,    70,    71,    71,    72,    72,    74,    76,    77,
-      78,    79,    80,    81,    82,    90,    90,    90,    92,    93,
-      94,    97,    98,    99,   100,   103,   104,   107,   107,   107,
-     109,   110,   113,   113,   115,   116,   119,   119,   119,   121,
-     122,   123,   124,   125,   126,   127,   128,   129,   130,   131,
-     132,   133,   134,   134,   134,   134,   134,   134,   135,   136
+       0,    88,    88,    94,    95,    96,    99,   100,   101,   102,
+     103,   104,   105,   106,   107,   108,   109,   110,   111,   114,
+     116,   119,   124,   125,   126,   129,   130,   131,   134,   135,
+     136,   139,   140,   143,   144,   147,   148,   151,   153,   156,
+     159,   162,   165,   168,   171,   180,   181,   182,   185,   186,
+     187,   192,   195,   198,   201,   206,   209,   214,   215,   216,
+     219,   220,   223,   224,   227,   228,   233,   234,   235,   238,
+     239,   240,   241,   242,   243,   244,   245,   246,   247,   248,
+     249,   250,   251,   252,   253,   254,   255,   256,   257,   258
 };
 #endif
 
@@ -1620,169 +1672,669 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-        case 16:
+        case 2:
 
 /* Line 1455 of yacc.c  */
-#line 54 "parser.y"
-    { fprintf(pars, " : expression\n"); ;}
+#line 88 "parser.y"
+    { 
+            (yyval.node) = createNode("Program", 1, (yyvsp[(1) - (1)].node)); 
+            printTree((yyval.node), 0); 
+        ;}
+    break;
+
+  case 3:
+
+/* Line 1455 of yacc.c  */
+#line 94 "parser.y"
+    { (yyval.node) = createNode("Statements", 2, (yyvsp[(1) - (2)].node), (yyvsp[(2) - (2)].node)); ;}
+    break;
+
+  case 4:
+
+/* Line 1455 of yacc.c  */
+#line 95 "parser.y"
+    { (yyval.node) = createNode("Statements", 1, (yyvsp[(1) - (1)].node)); ;}
+    break;
+
+  case 5:
+
+/* Line 1455 of yacc.c  */
+#line 96 "parser.y"
+    { (yyval.node) = NULL; ;}
+    break;
+
+  case 6:
+
+/* Line 1455 of yacc.c  */
+#line 99 "parser.y"
+    { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
+    break;
+
+  case 7:
+
+/* Line 1455 of yacc.c  */
+#line 100 "parser.y"
+    { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
+    break;
+
+  case 8:
+
+/* Line 1455 of yacc.c  */
+#line 101 "parser.y"
+    { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
+    break;
+
+  case 9:
+
+/* Line 1455 of yacc.c  */
+#line 102 "parser.y"
+    { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
+    break;
+
+  case 10:
+
+/* Line 1455 of yacc.c  */
+#line 103 "parser.y"
+    { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
+    break;
+
+  case 11:
+
+/* Line 1455 of yacc.c  */
+#line 104 "parser.y"
+    { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
+    break;
+
+  case 12:
+
+/* Line 1455 of yacc.c  */
+#line 105 "parser.y"
+    { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
+    break;
+
+  case 13:
+
+/* Line 1455 of yacc.c  */
+#line 106 "parser.y"
+    { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
+    break;
+
+  case 14:
+
+/* Line 1455 of yacc.c  */
+#line 107 "parser.y"
+    { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
+    break;
+
+  case 15:
+
+/* Line 1455 of yacc.c  */
+#line 108 "parser.y"
+    { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
+    break;
+
+  case 16:
+
+/* Line 1455 of yacc.c  */
+#line 109 "parser.y"
+    { (yyval.node) = createNode("ExprStat", 1, (yyvsp[(1) - (1)].node)); ;}
     break;
 
   case 17:
 
 /* Line 1455 of yacc.c  */
-#line 55 "parser.y"
-    { yyerrok; ;}
+#line 110 "parser.y"
+    { yyerrok; (yyval.node) = createNode("Error", 0); ;}
     break;
 
   case 18:
 
 /* Line 1455 of yacc.c  */
-#line 56 "parser.y"
-    { yyerrok; ;}
+#line 111 "parser.y"
+    { yyerrok; (yyval.node) = createNode("Error", 0); ;}
     break;
 
   case 19:
 
 /* Line 1455 of yacc.c  */
-#line 59 "parser.y"
-    { fprintf(pars, " : class definition\n"); ;}
+#line 114 "parser.y"
+    { (yyval.node) = createNode("ClassDef", 2, createLeaf("Id", (yyvsp[(2) - (3)].str)), (yyvsp[(3) - (3)].node)); ;}
     break;
 
   case 20:
 
 /* Line 1455 of yacc.c  */
-#line 61 "parser.y"
-    { fprintf(pars, " : method definition\n"); ;}
+#line 116 "parser.y"
+    { 
+                (yyval.node) = createNode("MethodDef", 5, (yyvsp[(1) - (7)].node), (yyvsp[(2) - (7)].node), createLeaf("Id", (yyvsp[(3) - (7)].str)), (yyvsp[(5) - (7)].node), (yyvsp[(7) - (7)].node)); 
+            ;}
     break;
 
   case 21:
 
 /* Line 1455 of yacc.c  */
-#line 62 "parser.y"
-    { fprintf(pars, " : method signature\n"); ;}
+#line 119 "parser.y"
+    { 
+                (yyval.node) = createNode("MethodSignature", 4, (yyvsp[(1) - (7)].node), (yyvsp[(2) - (7)].node), createLeaf("Id", (yyvsp[(3) - (7)].str)), (yyvsp[(5) - (7)].node)); 
+            ;}
+    break;
+
+  case 22:
+
+/* Line 1455 of yacc.c  */
+#line 124 "parser.y"
+    { (yyval.node) = createNode("Modifiers", 2, (yyvsp[(1) - (2)].node), (yyvsp[(2) - (2)].node)); ;}
+    break;
+
+  case 23:
+
+/* Line 1455 of yacc.c  */
+#line 125 "parser.y"
+    { (yyval.node) = createNode("Modifiers", 1, (yyvsp[(1) - (1)].node)); ;}
+    break;
+
+  case 24:
+
+/* Line 1455 of yacc.c  */
+#line 126 "parser.y"
+    { (yyval.node) = NULL; ;}
+    break;
+
+  case 25:
+
+/* Line 1455 of yacc.c  */
+#line 129 "parser.y"
+    { (yyval.node) = createLeaf("Modifier", (yyvsp[(1) - (1)].str)); ;}
+    break;
+
+  case 26:
+
+/* Line 1455 of yacc.c  */
+#line 130 "parser.y"
+    { (yyval.node) = createLeaf("Modifier", (yyvsp[(1) - (1)].str)); ;}
+    break;
+
+  case 27:
+
+/* Line 1455 of yacc.c  */
+#line 131 "parser.y"
+    { (yyval.node) = createLeaf("Modifier", (yyvsp[(1) - (1)].str)); ;}
     break;
 
   case 28:
 
 /* Line 1455 of yacc.c  */
-#line 68 "parser.y"
-    { (yyval.str) = (yyvsp[(1) - (1)].str); ;}
+#line 134 "parser.y"
+    { (yyval.node) = createLeaf("Type", (yyvsp[(1) - (1)].str)); ;}
     break;
 
   case 29:
 
 /* Line 1455 of yacc.c  */
-#line 68 "parser.y"
-    { (yyval.str) = (yyvsp[(1) - (1)].str); ;}
+#line 135 "parser.y"
+    { (yyval.node) = createLeaf("Type", (yyvsp[(1) - (1)].str)); ;}
     break;
 
   case 30:
 
 /* Line 1455 of yacc.c  */
-#line 68 "parser.y"
-    { (yyval.str) = (yyvsp[(1) - (1)].str); ;}
+#line 136 "parser.y"
+    { (yyval.node) = createLeaf("Type", (yyvsp[(1) - (1)].str)); ;}
+    break;
+
+  case 31:
+
+/* Line 1455 of yacc.c  */
+#line 139 "parser.y"
+    { (yyval.node) = createNode("Params", 1, (yyvsp[(1) - (1)].node)); ;}
+    break;
+
+  case 32:
+
+/* Line 1455 of yacc.c  */
+#line 140 "parser.y"
+    { (yyval.node) = NULL; ;}
+    break;
+
+  case 33:
+
+/* Line 1455 of yacc.c  */
+#line 143 "parser.y"
+    { (yyval.node) = createNode("ParamList", 1, (yyvsp[(1) - (1)].node)); ;}
+    break;
+
+  case 34:
+
+/* Line 1455 of yacc.c  */
+#line 144 "parser.y"
+    { (yyval.node) = createNode("ParamList", 2, (yyvsp[(1) - (3)].node), (yyvsp[(3) - (3)].node)); ;}
+    break;
+
+  case 35:
+
+/* Line 1455 of yacc.c  */
+#line 147 "parser.y"
+    { (yyval.node) = createNode("Param", 2, (yyvsp[(1) - (2)].node), createLeaf("Id", (yyvsp[(2) - (2)].str))); ;}
+    break;
+
+  case 36:
+
+/* Line 1455 of yacc.c  */
+#line 148 "parser.y"
+    { (yyval.node) = createNode("ArrayParam", 2, (yyvsp[(1) - (4)].node), createLeaf("Id", (yyvsp[(2) - (4)].str))); ;}
+    break;
+
+  case 37:
+
+/* Line 1455 of yacc.c  */
+#line 151 "parser.y"
+    { (yyval.node) = createNode("Block", 1, (yyvsp[(2) - (3)].node)); ;}
     break;
 
   case 38:
 
 /* Line 1455 of yacc.c  */
-#line 76 "parser.y"
-    { fprintf(pars, " : declaration statement\n"); ;}
+#line 153 "parser.y"
+    { 
+               (yyval.node) = createNode("DeclStat", 3, (yyvsp[(1) - (5)].node), createLeaf("Id", (yyvsp[(2) - (5)].str)), (yyvsp[(4) - (5)].node)); 
+           ;}
     break;
 
   case 39:
 
 /* Line 1455 of yacc.c  */
-#line 77 "parser.y"
-    { fprintf(pars, " : declaration statement\n"); ;}
+#line 156 "parser.y"
+    { 
+               (yyval.node) = createNode("DeclStat", 2, (yyvsp[(1) - (3)].node), createLeaf("Id", (yyvsp[(2) - (3)].str))); 
+           ;}
     break;
 
   case 40:
 
 /* Line 1455 of yacc.c  */
-#line 78 "parser.y"
-    { fprintf(pars, " : array declaration\n"); ;}
+#line 159 "parser.y"
+    { 
+               (yyval.node) = createNode("ArrayDeclStat", 4, (yyvsp[(1) - (10)].node), createLeaf("Id", (yyvsp[(2) - (10)].str)), createLeaf("Size", (yyvsp[(4) - (10)].str)), (yyvsp[(8) - (10)].node)); 
+           ;}
     break;
 
   case 41:
 
 /* Line 1455 of yacc.c  */
-#line 79 "parser.y"
-    { fprintf(tokens, "Error on Line %d: Missing dimension size or invalid array declaration format without size or initialization constraints.\n", yylineno); YYABORT; ;}
+#line 162 "parser.y"
+    { 
+               fprintf(tokens, "Error on Line %d: Missing dimension size or invalid array declaration format without size or initialization constraints.\n", yylineno); YYABORT; 
+           ;}
     break;
 
   case 42:
 
 /* Line 1455 of yacc.c  */
-#line 80 "parser.y"
-    { fprintf(pars, " : object instantiation\n"); ;}
+#line 165 "parser.y"
+    { 
+               (yyval.node) = createNode("ObjectInstantiation", 3, (yyvsp[(1) - (8)].node), createLeaf("Id", (yyvsp[(2) - (8)].str)), createLeaf("Class", (yyvsp[(5) - (8)].str))); 
+           ;}
+    break;
+
+  case 43:
+
+/* Line 1455 of yacc.c  */
+#line 168 "parser.y"
+    {
+               (yyval.node) = createNode("DeclStat", 3, createLeaf("Declare", (yyvsp[(1) - (4)].str)), (yyvsp[(2) - (4)].node), createLeaf("Id", (yyvsp[(3) - (4)].str)));
+           ;}
     break;
 
   case 44:
 
 /* Line 1455 of yacc.c  */
-#line 82 "parser.y"
+#line 171 "parser.y"
     {
-             if ((yyvsp[(1) - (8)].str) != NULL && (yyvsp[(5) - (8)].str) != NULL && strcmp((yyvsp[(1) - (8)].str), "int") == 0 && strcmp((yyvsp[(5) - (8)].str), "String") == 0) {
+             if ((yyvsp[(1) - (8)].node) && (yyvsp[(1) - (8)].node)->value && (yyvsp[(5) - (8)].node) && (yyvsp[(5) - (8)].node)->value && strcmp((yyvsp[(1) - (8)].node)->value, "int") == 0 && strcmp((yyvsp[(5) - (8)].node)->value, "String") == 0) {
                  fprintf(tokens, "Error on Line %d: Incompatible type cast detected between non-matching data types.\n", yylineno);
                  YYABORT;
              }
+             (yyval.node) = createNode("CastDeclStat", 4, (yyvsp[(1) - (8)].node), createLeaf("Id", (yyvsp[(2) - (8)].str)), (yyvsp[(5) - (8)].node), (yyvsp[(7) - (8)].node));
          ;}
+    break;
+
+  case 45:
+
+/* Line 1455 of yacc.c  */
+#line 180 "parser.y"
+    { (yyval.node) = createNode("ArrayVals", 1, (yyvsp[(1) - (1)].node)); ;}
+    break;
+
+  case 46:
+
+/* Line 1455 of yacc.c  */
+#line 181 "parser.y"
+    { (yyval.node) = createNode("ArrayVals", 2, (yyvsp[(1) - (3)].node), (yyvsp[(3) - (3)].node)); ;}
+    break;
+
+  case 47:
+
+/* Line 1455 of yacc.c  */
+#line 182 "parser.y"
+    { (yyval.node) = NULL; ;}
     break;
 
   case 48:
 
 /* Line 1455 of yacc.c  */
-#line 92 "parser.y"
-    { fprintf(pars, " : assignment statement\n"); ;}
+#line 185 "parser.y"
+    { (yyval.node) = createNode("AssignStat", 2, (yyvsp[(1) - (4)].node), (yyvsp[(3) - (4)].node)); ;}
     break;
 
   case 49:
 
 /* Line 1455 of yacc.c  */
-#line 93 "parser.y"
-    { fprintf(pars, " : expression statement\n"); ;}
+#line 186 "parser.y"
+    { (yyval.node) = createNode("ExprStat", 1, (yyvsp[(1) - (2)].node)); ;}
     break;
 
   case 50:
 
 /* Line 1455 of yacc.c  */
-#line 94 "parser.y"
-    { fprintf(tokens, "Error on Line %d: Malformed expression, trailing operator before ;.\n", yylineno); YYABORT; ;}
+#line 187 "parser.y"
+    { 
+               fprintf(tokens, "Error on Line %d: Malformed expression, trailing operator before ;.\n", yylineno); YYABORT; 
+           ;}
+    break;
+
+  case 51:
+
+/* Line 1455 of yacc.c  */
+#line 192 "parser.y"
+    { 
+             (yyval.node) = createNode("IfStat", 2, (yyvsp[(3) - (5)].node), (yyvsp[(5) - (5)].node)); 
+         ;}
+    break;
+
+  case 52:
+
+/* Line 1455 of yacc.c  */
+#line 195 "parser.y"
+    { 
+             (yyval.node) = createNode("IfElseStat", 3, (yyvsp[(3) - (7)].node), (yyvsp[(5) - (7)].node), (yyvsp[(7) - (7)].node)); 
+         ;}
+    break;
+
+  case 53:
+
+/* Line 1455 of yacc.c  */
+#line 198 "parser.y"
+    { 
+             (yyval.node) = createNode("IfStat", 1, (yyvsp[(3) - (4)].node)); 
+         ;}
     break;
 
   case 54:
 
 /* Line 1455 of yacc.c  */
-#line 100 "parser.y"
-    { fprintf(tokens, "Error on Line %d: Missing parentheses or malformed condition block.\n", yylineno); YYABORT; ;}
+#line 201 "parser.y"
+    { 
+             fprintf(tokens, "Error on Line %d: Missing parentheses or malformed condition block.\n", yylineno); YYABORT; 
+         ;}
+    break;
+
+  case 55:
+
+/* Line 1455 of yacc.c  */
+#line 206 "parser.y"
+    { 
+              (yyval.node) = createNode("ForStat", 4, (yyvsp[(3) - (9)].node), (yyvsp[(5) - (9)].node), (yyvsp[(7) - (9)].node), (yyvsp[(9) - (9)].node)); 
+          ;}
+    break;
+
+  case 56:
+
+/* Line 1455 of yacc.c  */
+#line 209 "parser.y"
+    { 
+              (yyval.node) = createNode("ForStat", 3, (yyvsp[(3) - (8)].node), (yyvsp[(5) - (8)].node), (yyvsp[(7) - (8)].node)); 
+          ;}
+    break;
+
+  case 57:
+
+/* Line 1455 of yacc.c  */
+#line 214 "parser.y"
+    { (yyval.node) = createNode("ForInitDecl", 3, (yyvsp[(1) - (4)].node), createLeaf("Id", (yyvsp[(2) - (4)].str)), (yyvsp[(4) - (4)].node)); ;}
+    break;
+
+  case 58:
+
+/* Line 1455 of yacc.c  */
+#line 215 "parser.y"
+    { (yyval.node) = createNode("ForInitAssign", 2, (yyvsp[(1) - (3)].node), (yyvsp[(3) - (3)].node)); ;}
+    break;
+
+  case 59:
+
+/* Line 1455 of yacc.c  */
+#line 216 "parser.y"
+    { (yyval.node) = NULL; ;}
+    break;
+
+  case 60:
+
+/* Line 1455 of yacc.c  */
+#line 219 "parser.y"
+    { (yyval.node) = createNode("WhileStat", 2, (yyvsp[(3) - (5)].node), (yyvsp[(5) - (5)].node)); ;}
+    break;
+
+  case 61:
+
+/* Line 1455 of yacc.c  */
+#line 220 "parser.y"
+    { (yyval.node) = createNode("WhileStat", 1, (yyvsp[(3) - (4)].node)); ;}
+    break;
+
+  case 62:
+
+/* Line 1455 of yacc.c  */
+#line 223 "parser.y"
+    { (yyval.node) = createNode("RetStat", 1, (yyvsp[(2) - (3)].node)); ;}
+    break;
+
+  case 63:
+
+/* Line 1455 of yacc.c  */
+#line 224 "parser.y"
+    { (yyval.node) = createNode("RetStat", 0); ;}
     break;
 
   case 64:
 
 /* Line 1455 of yacc.c  */
-#line 115 "parser.y"
-    { fprintf(pars, " : print statement\n"); ;}
+#line 227 "parser.y"
+    { (yyval.node) = createNode("PrintStat", 1, (yyvsp[(3) - (5)].node)); ;}
     break;
 
   case 65:
 
 /* Line 1455 of yacc.c  */
-#line 116 "parser.y"
-    { fprintf(tokens, "Error on Line %d: Malformed parameter or unexpected token ; inside method call.\n", yylineno); YYABORT; ;}
+#line 228 "parser.y"
+    { 
+                fprintf(tokens, "Error on Line %d: Malformed parameter or unexpected token ; inside method call.\n", yylineno); YYABORT; 
+            ;}
+    break;
+
+  case 66:
+
+/* Line 1455 of yacc.c  */
+#line 233 "parser.y"
+    { (yyval.node) = createNode("PrintArgs", 1, (yyvsp[(1) - (1)].node)); ;}
+    break;
+
+  case 67:
+
+/* Line 1455 of yacc.c  */
+#line 234 "parser.y"
+    { (yyval.node) = createNode("PrintArgs", 2, (yyvsp[(1) - (3)].node), (yyvsp[(3) - (3)].node)); ;}
+    break;
+
+  case 68:
+
+/* Line 1455 of yacc.c  */
+#line 235 "parser.y"
+    { (yyval.node) = NULL; ;}
+    break;
+
+  case 69:
+
+/* Line 1455 of yacc.c  */
+#line 238 "parser.y"
+    { (yyval.node) = createNode("Expr", 3, (yyvsp[(1) - (3)].node), createLeaf("Operator", "+"), (yyvsp[(3) - (3)].node)); ;}
+    break;
+
+  case 70:
+
+/* Line 1455 of yacc.c  */
+#line 239 "parser.y"
+    { (yyval.node) = createNode("Expr", 3, (yyvsp[(1) - (3)].node), createLeaf("Operator", "-"), (yyvsp[(3) - (3)].node)); ;}
+    break;
+
+  case 71:
+
+/* Line 1455 of yacc.c  */
+#line 240 "parser.y"
+    { (yyval.node) = createNode("Expr", 3, (yyvsp[(1) - (3)].node), createLeaf("Operator", "*"), (yyvsp[(3) - (3)].node)); ;}
+    break;
+
+  case 72:
+
+/* Line 1455 of yacc.c  */
+#line 241 "parser.y"
+    { (yyval.node) = createNode("Expr", 3, (yyvsp[(1) - (3)].node), createLeaf("Operator", "/"), (yyvsp[(3) - (3)].node)); ;}
+    break;
+
+  case 73:
+
+/* Line 1455 of yacc.c  */
+#line 242 "parser.y"
+    { (yyval.node) = createNode("Expr", 3, (yyvsp[(1) - (3)].node), createLeaf("Relop", (yyvsp[(2) - (3)].str)), (yyvsp[(3) - (3)].node)); ;}
+    break;
+
+  case 74:
+
+/* Line 1455 of yacc.c  */
+#line 243 "parser.y"
+    { (yyval.node) = createNode("Expr", 3, (yyvsp[(1) - (3)].node), createLeaf("Logicop", (yyvsp[(2) - (3)].str)), (yyvsp[(3) - (3)].node)); ;}
+    break;
+
+  case 75:
+
+/* Line 1455 of yacc.c  */
+#line 244 "parser.y"
+    { (yyval.node) = createNode("UnaryExpr", 2, createLeaf("Logicop", (yyvsp[(1) - (2)].str)), (yyvsp[(2) - (2)].node)); ;}
+    break;
+
+  case 76:
+
+/* Line 1455 of yacc.c  */
+#line 245 "parser.y"
+    { (yyval.node) = createNode("PostOp", 2, (yyvsp[(1) - (2)].node), createLeaf("Unop", (yyvsp[(2) - (2)].str))); ;}
+    break;
+
+  case 77:
+
+/* Line 1455 of yacc.c  */
+#line 246 "parser.y"
+    { (yyval.node) = createNode("PreOp", 2, createLeaf("Unop", (yyvsp[(1) - (2)].str)), (yyvsp[(2) - (2)].node)); ;}
+    break;
+
+  case 78:
+
+/* Line 1455 of yacc.c  */
+#line 247 "parser.y"
+    { (yyval.node) = createNode("ParenExpr", 1, (yyvsp[(2) - (3)].node)); ;}
+    break;
+
+  case 79:
+
+/* Line 1455 of yacc.c  */
+#line 248 "parser.y"
+    { (yyval.node) = createNode("CastExpr", 2, (yyvsp[(2) - (4)].node), (yyvsp[(4) - (4)].node)); ;}
+    break;
+
+  case 80:
+
+/* Line 1455 of yacc.c  */
+#line 249 "parser.y"
+    { (yyval.node) = createNode("ArrayAccess", 2, createLeaf("Id", (yyvsp[(1) - (4)].str)), (yyvsp[(3) - (4)].node)); ;}
+    break;
+
+  case 81:
+
+/* Line 1455 of yacc.c  */
+#line 250 "parser.y"
+    { (yyval.node) = createLeaf("Id", (yyvsp[(1) - (1)].str)); ;}
+    break;
+
+  case 82:
+
+/* Line 1455 of yacc.c  */
+#line 251 "parser.y"
+    { (yyval.node) = createLeaf("Const1", (yyvsp[(1) - (1)].str)); ;}
+    break;
+
+  case 83:
+
+/* Line 1455 of yacc.c  */
+#line 252 "parser.y"
+    { (yyval.node) = createLeaf("Const2", (yyvsp[(1) - (1)].str)); ;}
+    break;
+
+  case 84:
+
+/* Line 1455 of yacc.c  */
+#line 253 "parser.y"
+    { (yyval.node) = createLeaf("Const3", (yyvsp[(1) - (1)].str)); ;}
+    break;
+
+  case 85:
+
+/* Line 1455 of yacc.c  */
+#line 254 "parser.y"
+    { (yyval.node) = createLeaf("Const4", (yyvsp[(1) - (1)].str)); ;}
+    break;
+
+  case 86:
+
+/* Line 1455 of yacc.c  */
+#line 255 "parser.y"
+    { (yyval.node) = createLeaf("Const_F", (yyvsp[(1) - (1)].str)); ;}
+    break;
+
+  case 87:
+
+/* Line 1455 of yacc.c  */
+#line 256 "parser.y"
+    { (yyval.node) = createLeaf("Bool", (yyvsp[(1) - (1)].str)); ;}
+    break;
+
+  case 88:
+
+/* Line 1455 of yacc.c  */
+#line 257 "parser.y"
+    { (yyval.node) = createNode("MethodCall", 2, createLeaf("Id", (yyvsp[(1) - (4)].str)), (yyvsp[(3) - (4)].node)); ;}
     break;
 
   case 89:
 
 /* Line 1455 of yacc.c  */
-#line 136 "parser.y"
-    { fprintf(tokens, "Error on Line %d: Malformed logical expression or missing operand.\n", yylineno); YYABORT; ;}
+#line 258 "parser.y"
+    { 
+           fprintf(tokens, "Error on Line %d: Malformed logical expression or missing operand.\n", yylineno); YYABORT; 
+       ;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 1786 "parser.tab.c"
+#line 2338 "parser.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1994,7 +2546,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 139 "parser.y"
+#line 263 "parser.y"
 
 
 int yyerror(char *s)
@@ -2006,9 +2558,13 @@ int yyerror(char *s)
 
 int main(int argc,char*argv[])
 {	
+    if (argc < 2) {
+        printf("Usage: %s <input_file>\n", argv[0]);
+        return 1;
+    }
 	yyin = fopen(argv[1],"r");
-	char s1[30] = "seq_tokens_";
-	char s2[30] = "parser_";
+	char s1[100] = "seq_tokens_";
+	char s2[100] = "parser_";
 	strcat(s1,argv[1]);
 	strcat(s2,argv[1]);
 	tokens = fopen(s1,"w");
