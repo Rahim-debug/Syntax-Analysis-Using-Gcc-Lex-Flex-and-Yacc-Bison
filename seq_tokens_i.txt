@@ -1,0 +1,5 @@
+reserved keyword : System.out.print
+special symbol : (
+punctuation : ;
+special symbol : )
+Error on Line 1: Malformed parameter or unexpected token ; inside method call.
