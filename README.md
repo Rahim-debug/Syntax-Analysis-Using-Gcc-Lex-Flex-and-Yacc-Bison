@@ -23,5 +23,5 @@ Bison(GNU Bison 3.8.2) for generating "parser.tab.c" and
 Contributer 
 
 H.Saad ur Rehman
-Raahim Ahmed Khan  
 M Sameer Siddiqui
+Raahim Ahmed Khan  
